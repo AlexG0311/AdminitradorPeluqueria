@@ -2,14 +2,16 @@
 require_once("../conexion_api.php");
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    // Obtén los datos enviados por el formulario
     $idProducto = trim($_POST['idProducto']);
     $nombre = trim($_POST['nombre']);
     $descripcion = trim($_POST['descripcion']);
     $precio = trim($_POST['precio']);
-    $descuento = trim($_POST['descuento']);
-    $idCliente = trim($_POST['idCliente']);
+    $stok = trim($_POST['stok']);
+    $img = trim($_POST['img']);
 
-    if (empty($idProducto) || empty($nombre) || empty($descripcion) || empty($precio) || empty($descuento) || empty($idCliente)) {
+    // Validar que todos los campos están llenos
+    if (empty($nombre) || empty($descripcion) || empty($precio) || empty($stok) || empty($img)) {
         echo "<script>alert('Todos los campos son obligatorios'); window.history.back();</script>";
         exit;
     }
@@ -20,18 +22,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         'Nombre' => $nombre,
         'Descripcion' => $descripcion,
         'Precio' => (float)$precio,
-        'descuento' => (int)$descuento,
-        'Cliente_idCliente' => (int)$idCliente
+        'Stok' => (int)$stok,
+        'Img' => $img
     );
 
+    // Enviar los datos actualizados a la API
     $response = $api->put("/Productoes/" . urlencode($idProducto), $data);
 
-    // Verificar el estado de la respuesta HTTP
-    if ($response && $response['status_code'] === 200) {
-        echo "<script>alert('Error al modificadar producto'); window.location='form_edita_producto.php';</script>";
+    // Verificar el estado de la respuesta
+    if ($response && $response['status_code'] === 204) {
+        echo "<script>alert('Producto modificado correctamente'); window.location='form_edita_producto.php';</script>";
     } else {
-        $errorMessage = isset($response['body']['message']) ? $response['body']['message'] : 'Producto modificado';
-        echo "<script>alert('$errorMessage'); window.location='form_edita_producto.php';</script>";
+        $errorMessage = isset($response['body']['message']) ? $response['body']['message'] : 'Error al modificar el producto';
+        echo "<script>alert('$errorMessage'); window.history.back();</script>";
     }
 }
 ?>

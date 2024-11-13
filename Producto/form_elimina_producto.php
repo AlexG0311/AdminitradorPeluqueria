@@ -40,16 +40,19 @@ require_once("../conexion_api.php"); // Incluir el archivo de conexión a la API
                     // Crear una instancia de la clase de conexión a la API
                     $api = new ConexionAPI();
                     
-                    // Obtener los productos desde la API
-                    $productos = $api->get("/Productoes");
+                        // Obtener los usuarios desde la API
+                        $response = $api->get("/Productoes");
 
-                    if ($productos && is_array($productos)) {
-                        foreach ($productos as $producto) {
+                    // Verificar si $response tiene los usuarios en un contenedor como '$values'
+                    $usuarios = $response['$values'] ?? $response;
+
+                    if ($usuarios && is_array($usuarios)) {
+                        foreach ($usuarios as $usuario) {
                             // Ajusta los nombres de los campos según los datos de tu API
-                            echo "<option value='" . htmlspecialchars($producto['idProducto']) . "'>" . htmlspecialchars($producto['Nombre']) . "</option>";
+                            echo "<option value='" . htmlspecialchars($usuario['idProducto']) . "'>" . htmlspecialchars($usuario['Nombre']) . "</option>";
                         }
                     } else {
-                        echo "<option value='0'>No se pudieron cargar los productos</option>";
+                        echo "<option value='0'>No se pudieron cargar los usuarios</option>";
                     }
                     ?>
                 </select>               
