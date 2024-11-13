@@ -5,7 +5,11 @@ require_once("../conexion_api.php"); // Incluir el archivo de conexión a la API
 // Crear una instancia de la clase de conexión a la API
 $api = new ConexionAPI();
 
-$servicios = $api->get("/Servicios");
+// Obtener los servicios de la API
+$response = $api->get("/Servicios");
+
+// Verificar que la respuesta tenga la clave $values
+$servicios = isset($response['$values']) ? $response['$values'] : []; // Acceder a la clave $values
 
 ?>
 <!DOCTYPE html>
@@ -13,19 +17,13 @@ $servicios = $api->get("/Servicios");
 <head>
     <meta charset="utf-8">
     <title>Consulta Servicios</title>
-    <link rel="stylesheet" type="text/css" href="../src/css/estilos.css" >
-
+    <link rel="stylesheet" type="text/css" href="../src/css/estilos.css">
     <script type="text/javascript">
         function atras() {
             window.location = "../admin.php";
         }
     </script>
-
-    <style>                        
-        fieldset { padding:0; border:0; margin-top:25px; }
-    </style>
-
-    <style type="text/css">
+    <style>
         .productos_listado {
             table-layout: fixed;
             width: 700px;
@@ -34,75 +32,63 @@ $servicios = $api->get("/Servicios");
             font-family: Arial, Helvetica, sans-serif;
             font-size: 12px;
         }
-
         .productos_listado caption {
             background-color: #008080;
-            font-family: Arial, Helvetica, sans-serif;
-            font-size: 14px;
-            font-weight: bold;
             color: #FFFFFF;
-            padding: 8px 0px 8px 0px;
+            padding: 8px 0px;
+            font-weight: bold;
         }
-
+        .productos_listado th, .productos_listado td {
+            padding: 8px;
+            text-align: center;
+        }
         .productos_listado th {
             background-color: #D3D4DF;
-            color: #333333;
         }
-
-        .productos_listado td {
-            height: 24px;                    
+        .productos_listado img {
+            width: 60px;      /* Establece un ancho fijo */
+            height: 60px;     /* Establece una altura fija */
+            object-fit: cover; /* Recorta la imagen para ajustarse al área */
         }
-        .productos_listado td.td_linea {
-            height: 2px;
-            background-color: #333333;
-            padding: 2px 0px 4px 3px;
-        }           
     </style>
-
 </head>
 <body>
     <div class="contenedor2">
-        <span><?php echo "Conectado: " . (isset($_SESSION["usuario"]) ? $_SESSION["usuario"] : ''); ?></span>              
-      
+        <span><?php echo "Conectado: " . (isset($_SESSION["usuario"]) ? $_SESSION["usuario"] : ''); ?></span>
         <h2 class="titulo2">Consulta Servicios</h2>
-        <br><br>
-
         <table border="0" class="productos_listado">
             <caption>Lista de Servicios</caption>
             <tr>
-                <th width="100">ID</th>
-                <th width="150">Nombre</th>                    
-                <th width="300">Descripción</th>
-                <th width="100">Precio</th>
-                <th width="100">Duración (min)</th>
-                <th width="50">&nbsp;</th> 
+                <th>ID</th>
+                <th>Nombre</th>
+                <th>Descripción</th>
+                <th>Precio</th>
+                <th>Duración</th>
+                <th>Imagen</th>
             </tr>
             <?php
-            if ($servicios && !empty($servicios)) {
+            if (!empty($servicios)) {
                 foreach ($servicios as $servicio) {
-                    // Verificar la clave que tiene el ID
-                    $id = isset($servicio['idServicio']) ? $servicio['idServicio'] : 'N/A';
+                    // Extraer los campos necesarios
+                    $id = htmlspecialchars($servicio['idServicio'] ?? 'N/A');
+                    $nombre = htmlspecialchars($servicio['Nombre'] ?? 'N/A');
+                    $descripcion = htmlspecialchars($servicio['Descripcion'] ?? 'N/A');
+                    $precio = htmlspecialchars($servicio['Precio'] ?? 'N/A');
+                    $duracion = htmlspecialchars($servicio['Duracion'] ?? 'N/A');
+                    $imagen = htmlspecialchars($servicio['Img'] ?? ''); // Obtener la URL de la imagen
                     ?>
                     <tr>
-                        <td align="center" width="100">
-                            <?php echo htmlspecialchars($id); ?>
-                        </td>
-                        <td align="center" width="150">
-                            <?php echo htmlspecialchars($servicio['Nombre']); ?>
-                        </td>
-                        <td align="center" width="300">
-                            <?php echo htmlspecialchars($servicio['Descripcion']); ?>
-                        </td>
-                        <td align="center" width="100">
-                            <?php echo htmlspecialchars($servicio['Precio']); ?>
-                        </td>
-                        <td align="center" width="100">
-                            <?php echo htmlspecialchars($servicio['Duracion']); ?>
-                        </td>
-                        <td align="center" width="50">
-                            <a href='ver_servicios.php?id=<?php echo urlencode($id); ?>'>
-                                <span class="com">Ver</span>
-                            </a>
+                        <td><?php echo $id; ?></td>
+                        <td><?php echo $nombre; ?></td>
+                        <td><?php echo $descripcion; ?></td>
+                        <td><?php echo $precio; ?></td>
+                        <td><?php echo $duracion; ?></td>
+                        <td>
+                            <?php if ($imagen): ?>
+                                <img src="<?php echo $imagen; ?>" alt="Imagen del servicio">
+                            <?php else: ?>
+                                <span>No disponible</span>
+                            <?php endif; ?>
                         </td>
                     </tr>
                     <?php
@@ -111,7 +97,7 @@ $servicios = $api->get("/Servicios");
                 echo "<tr><td colspan='6'>No se pudieron obtener los datos de los servicios.</td></tr>";
             }
             ?>
-        </table> 
+        </table>
         <br>
         <center><input type="button" value="Volver" onclick="atras()"></center>
     </div>

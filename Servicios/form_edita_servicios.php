@@ -18,6 +18,7 @@ require_once("../conexion_api.php");
             }
             document.formulario.submit(); // Envía el formulario
         }
+
         function atras() {
             window.location = "../admin.php";
         } 
@@ -33,11 +34,27 @@ require_once("../conexion_api.php");
                 <select name="idServicio">
                     <option value='0'>...</option>
                     <?php
+                    // Instancia de la API
                     $api = new ConexionAPI();
-                    $servicios = $api->get("/Servicios");
+                    
+                    // Obtener lista de servicios
+                    $response = $api->get("/Servicios");
+
+                    // Comprobamos si los servicios están en '$values' o directamente en el arreglo
+                    $servicios = $response['$values'] ?? $response;
+
+                    // Verificamos si $servicios es un arreglo válido
                     if ($servicios && is_array($servicios)) {
                         foreach ($servicios as $servicio) {
-                            echo "<option value='" . htmlspecialchars($servicio['idServicio']) . "'>" . htmlspecialchars($servicio['Nombre']) . "</option>";
+                            // Verifica si el array tiene los índices correctos
+                            $idServicio = htmlspecialchars($servicio['idServicio'] ?? '');
+                            $nombre = htmlspecialchars($servicio['Nombre'] ?? '');
+                            $descripcion = htmlspecialchars($servicio['Descripcion'] ?? '');
+                            
+                            // Solo muestra opciones válidas
+                            if ($idServicio && $nombre) {
+                                echo "<option value='$idServicio'>$nombre</option>";
+                            }
                         }
                     } else {
                         echo "<option value='0'>No se pudieron cargar los servicios</option>";

@@ -6,7 +6,7 @@ require_once("../conexion_api.php"); // Incluir el archivo de conexión a la API
 <html>
 <head>
     <meta charset="utf-8">
-    <title>Eliminar servicio</title>
+    <title>Eliminar Servicio</title>
     <link rel="stylesheet" type="text/css" href="../src/css/estilos.css">
     <script type="text/javascript" language="javascript">
         function atras() {
@@ -28,7 +28,7 @@ require_once("../conexion_api.php"); // Incluir el archivo de conexión a la API
 <body>
     <div id="contenedor">
         <span><?php echo "Conectado: " . (isset($_SESSION["usuario"]) ? $_SESSION["usuario"] : ''); ?></span>                
-        <h2 class="titulo2">Elimina servicio</h2>
+        <h2 class="titulo2">Eliminar Servicio</h2>
         <br><br>  
         <form action="elimina_servicios.php" method="POST" name="formulario">
             <div class="campos">            
@@ -41,7 +41,10 @@ require_once("../conexion_api.php"); // Incluir el archivo de conexión a la API
                     $api = new ConexionAPI();
                     
                     // Obtener los servicios desde la API
-                    $servicios = $api->get("/Servicios");
+                    $response = $api->get("/Servicios");
+
+                    // Verificar si $response tiene los servicios en un contenedor como '$values'
+                    $servicios = $response['$values'] ?? $response;
 
                     if ($servicios && is_array($servicios)) {
                         foreach ($servicios as $servicio) {
