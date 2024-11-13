@@ -1,0 +1,198 @@
+body {
+  margin: 0;
+  padding: 0;
+  font-family: "Arial", sans-serif;
+  background-color: #141414;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+}
+
+h2 {
+  font: bold 2.5em "Arial", sans-serif;
+  margin: 0;
+  text-align: center;
+  color: #333;
+  padding-bottom: 1em;
+}
+
+/* Contenedor general */
+.contenedor2 {
+  background: #605858;
+  margin: 2em auto;
+  border-radius: 15px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 2em;
+  max-width: 800px;
+  width: 100%;
+}
+
+#contenedor {
+  background: #ffffff;
+  border-radius: 15px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  margin: 2em auto;
+  padding: 2em;
+  width: 500px;
+}
+
+/* Campos del formulario */
+.campos {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.campos label {
+  font: bold 1em "Arial", sans-serif;
+  color: #333;
+}
+
+.campos input,
+.campos select {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 1em;
+  outline: none;
+  transition: border-color 0.3s;
+}
+
+.campos input:focus,
+.campos select:focus {
+  border-color: #007b7b;
+}
+
+/* Botones */
+input.boton {
+  background: #007b7b;
+  color: #ffffff;
+  border: none;
+  padding: 10px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+input.boton:hover {
+  background: #005f5f;
+}
+
+/* Texto general */
+.txtNormal {
+  font-family: "Verdana", sans-serif;
+  font-size: 1em;
+  color: #000;
+}
+
+.titulo2 {
+  font-family: "Verdana", sans-serif;
+  font-size: 2em;
+  color: #007b7b;
+  text-align: center;
+  font-weight: bold;
+  padding: 15px;
+}
+
+/* Estilo de las imágenes (si aplica) */
+.contenedor2 img {
+  padding: 0 10px;
+  display: inline;
+  max-width: 100%;
+  height: auto;
+}
+
+/* Fondo de la cabecera de la página */
+header {
+  background-color: #007b7b;
+  padding: 2em;
+  border-bottom: 2px solid #005f5f;
+  text-align: center;
+}
+
+header h1 {
+  margin: 0;
+  color: #ffffff;
+  font-size: 3em;
+}
+
+/* Otros elementos */
+.etiqueta {
+  font-family: "Verdana", sans-serif;
+  font-weight: bold;
+}
+
+/* Estilo del menú lateral */
+.sidebar {
+  width: 250px;
+  background-color: #007b7b;
+  color: #ffffff;
+  display: flex;
+  flex-direction: column;
+  justify-content: start;
+  padding-top: 20px;
+  position: fixed;
+  height: 100vh;
+  left: -250px;
+  transition: left 0.3s ease;
+  z-index: 150;
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+}
+
+.sidebar.open {
+  left: 0;
+}
+
+.sidebar h2 {
+  text-align: center;
+  color: #ffffff;
+  font-weight: bold;
+  margin: 0 20px 20px;
+  border-bottom: 1px solid #5ababa;
+  padding-bottom: 15px;
+}
+
+.sidebar ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.sidebar ul li {
+  padding: 15px 20px;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.sidebar ul li:hover {
+  background-color: #005f5f;
+}
+
+.sidebar ul li img {
+  margin-right: 10px;
+  width: 24px;
+  height: 24px;
+}
+
+.sidebar ul li a {
+  text-decoration: none;
+  color: #ffffff;
+  display: block;
+  width: 100%;
+}
+
+.sidebar ul li a:hover {
+  color: #e0f4f3;
+}
+
+.close-sidebar {
+  font-size: 18px;
+  color: #ffffff;
+  padding: 10px;
+  text-align: right;
+  cursor: pointer;
+  background-color: #005f5f;
+}
