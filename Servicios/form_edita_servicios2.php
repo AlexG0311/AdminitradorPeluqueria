@@ -66,7 +66,7 @@ if (!$servicio || !is_array($servicio)) {
 <body>
     <div id="contenedor">
         <h2 class="titulo2">Editar Servicio: <?php echo htmlspecialchars($servicio['Nombre']); ?></h2>
-        <form action="edita_servicios.php" method="POST" name="formulario" enctype="multipart/form-data">
+        <form action="edita_servicios.php" method="POST" name="formulario">
             <div class="campos">
                 <label>Nombre: *</label>
                 <input type="text" name="nombre" value="<?php echo htmlspecialchars($servicio['Nombre']); ?>"><br><br>
@@ -103,8 +103,8 @@ if (!$servicio || !is_array($servicio)) {
                 </div>
                 <br>
 
-                <label>Imagen:</label>
-                <input type="file" name="imagen" accept="image/*"><br><br>
+                <label>Imagen (URL o descripción):</label>
+                <textarea name="imagen"><?php echo htmlspecialchars($servicio['Img']); ?></textarea><br><br>
                 <small>Deja en blanco si no deseas cambiar la imagen</small><br><br>
 
                 <input type="hidden" name="idServicio" value="<?php echo htmlspecialchars($idServicio); ?>">

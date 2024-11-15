@@ -20,6 +20,7 @@ session_start();
             const precio = form['precio'].value.trim();
             const duracionHoras = form['duracionHoras'].value.trim();
             const duracionMinutos = form['duracionMinutos'].value.trim();
+            const imagen = form['imagen'].value.trim();
 
             if (nombre.length === 0) {
                 alert("El campo nombre es obligatorio");
@@ -51,9 +52,7 @@ session_start();
                 return false;
             }
 
-            // Verificar si se ha seleccionado una imagen
-            const imagen = form['imagen'].value;
-            if (imagen === '') {
+            if (imagen.length === 0) {
                 alert("El campo imagen es obligatorio");
                 form['imagen'].focus();
                 return false;
@@ -67,7 +66,7 @@ session_start();
     <div id="contenedor">
         <h2 class="titulo2">Guardar Servicio</h2>
         <br><br>
-        <form action="guarda_servicio.php" method="POST" name="formulario" enctype="multipart/form-data">
+        <form action="guarda_servicios.php" method="POST" name="formulario">
             <div class="campos">
                 <label>Nombre: *</label>
                 <input type="text" id="nombre" name="nombre" /><br>
@@ -103,9 +102,9 @@ session_start();
                 </div>
                 <br>
 
-                <!-- Campo de imagen -->
-                <label>Imagen: *</label>
-                <input type="file" name="imagen" accept="image/*" /><br><br>
+                <!-- Campo de texto para la imagen -->
+                <label>Imagen (URL o descripción): *</label>
+                <textarea name="imagen" id="imagen"></textarea><br><br>
 
                 <input type="button" value="Aceptar" onclick="validaDatos()">
                 <input type="button" value="Volver" onclick="atras()">
