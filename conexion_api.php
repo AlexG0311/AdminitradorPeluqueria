@@ -5,7 +5,7 @@ class ConexionAPI {
 
     public function __construct() {
         // Configura la URL base de la API
-        $this->baseUrl = "https://821e-181-78-20-113.ngrok-free.app/api";
+        $this->baseUrl = "https://da89-181-78-20-113.ngrok-free.app/api";
     }
 
     // Método para hacer solicitudes GET

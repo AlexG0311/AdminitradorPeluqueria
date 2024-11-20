@@ -2,51 +2,77 @@
 require_once("../conexion_api.php");
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    // Crear la instancia de ConexionAPI
+    $api = new ConexionAPI();
+
     $idServicio = trim($_POST['idServicio']);
     $nombre = trim($_POST['nombre']);
     $descripcion = trim($_POST['descripcion']);
     $precio = trim($_POST['precio']);
-    $duracionHoras = trim($_POST['duracionHoras']);
-    $duracionMinutos = trim($_POST['duracionMinutos']);
-    $imagen = trim($_POST['imagen']); // Recibir el texto ingresado en el textarea
+    $duracionHoras = $_POST['duracionHoras'];
+    $duracionMinutos = $_POST['duracionMinutos'];
+    $imagen = trim($_POST['imagen']);
 
-    // Validación de campos obligatorios, excepto el campo de imagen
-    if (empty($idServicio) || empty($nombre) || empty($descripcion) || empty($precio) || empty($duracionHoras) || empty($duracionMinutos)) {
+    // Validaciones
+    if (
+        empty($idServicio) || 
+        empty($nombre) || 
+        empty($descripcion) || 
+        empty($precio) || 
+        ($duracionHoras === '0' && $duracionMinutos === '0')
+    ) {
         echo "<script>alert('Todos los campos son obligatorios'); window.history.back();</script>";
         exit;
     }
 
-    // Validar que el precio y la duración sean valores numéricos
-    if (!is_numeric($precio) || !is_numeric($duracionHoras) || !is_numeric($duracionMinutos)) {
-        echo "<script>alert('El precio y la duración deben ser valores numéricos'); window.history.back();</script>";
+    if (!is_numeric($precio) || $precio <= 0) {
+        echo "<script>alert('El precio debe ser un número positivo'); window.history.back();</script>";
         exit;
     }
 
-    // Convertir la duración total en formato string (hh:mm:ss)
-    $duracionFormatted = sprintf("%02d:%02d:%02d", $duracionHoras, $duracionMinutos, 0); // Formato hh:mm:ss
+    if ($descripcion === ".....") {
+        echo "<script>alert('La descripción no puede contener solo puntos'); window.history.back();</script>";
+        exit;
+    }
 
-    $api = new ConexionAPI();
+    if (!empty($imagen) && !filter_var($imagen, FILTER_VALIDATE_URL)) {
+        echo "<script>alert('La URL de la imagen no es válida'); window.history.back();</script>";
+        exit;
+    }
+
+    // Formatear duración
+    $duracionFormatted = sprintf("%02d:%02d:%02d", $duracionHoras, $duracionMinutos, 0);
+
+    // Preparar datos
     $data = array(
-        'idServicio' => $idServicio,
         'Nombre' => $nombre,
         'Descripcion' => $descripcion,
-        'Precio' => (float)$precio,
+        'Precio' => number_format((float)$precio, 2, '.', ''), // Precio en formato flotante
         'Duracion' => $duracionFormatted,
     );
 
-    // Solo agregar el campo de imagen si tiene contenido
     if (!empty($imagen)) {
         $data['Img'] = $imagen;
     }
 
+    // Enviar datos a la API
     $response = $api->put("/Servicios/" . urlencode($idServicio), $data);
 
-    // Verificar el estado de la respuesta HTTP
     if ($response && isset($response['status_code']) && $response['status_code'] === 204) {
         echo "<script>alert('Servicio modificado exitosamente'); window.location='../admin.php';</script>";
     } else {
-        $errorMessage = isset($response['body']['message']) ? $response['body']['message'] : 'Error al modificar el servicio';
-        echo "<script>alert('$errorMessage'); window.location='form_edita_servicios.php';</script>";
+        echo "<pre>Datos enviados:</pre>";
+        print_r($data);
+        echo "<pre>Respuesta de la API:</pre>";
+        print_r($response);
+
+        if (isset($response['body'])) {
+            echo "<pre>Detalle del error:</pre>";
+            echo $response['body']; // Imprime el cuerpo del error si existe
+        } else {
+            echo "<pre>No se recibieron detalles del error en la respuesta.</pre>";
+        }
+        exit;
     }
 }
 ?>

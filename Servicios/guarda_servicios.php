@@ -2,17 +2,23 @@
 require_once("../conexion_api.php");
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $idServicio = trim($_POST['idServicio']);
+    // Capturar datos del formulario
     $nombre = trim($_POST['nombre']);
     $descripcion = trim($_POST['descripcion']);
     $precio = trim($_POST['precio']);
     $duracionHoras = trim($_POST['duracionHoras']);
     $duracionMinutos = trim($_POST['duracionMinutos']);
-    $imagen = trim($_POST['imagen']); // Recibir el texto ingresado en el textarea
+    $imagen = trim($_POST['imagen']); // Imagen como URL o descripción
 
-    // Validación de campos obligatorios, excepto el campo de imagen
-    if (empty($idServicio) || empty($nombre) || empty($descripcion) || empty($precio) || empty($duracionHoras) || empty($duracionMinutos)) {
-        echo "<script>alert('Todos los campos son obligatorios'); window.history.back();</script>";
+    // Validación de campos obligatorios
+    if (
+        empty($nombre) ||
+        empty($descripcion) ||
+        empty($precio) ||
+        ($duracionHoras === '0' && $duracionMinutos === '0') ||
+        empty($imagen)
+    ) {
+        echo "<script>alert('Todos los campos son obligatorios :D'); window.history.back();</script>";
         exit;
     }
 
@@ -22,31 +28,28 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }
 
-    // Convertir la duración total en formato string (hh:mm:ss)
-    $duracionFormatted = sprintf("%02d:%02d:%02d", $duracionHoras, $duracionMinutos, 0); // Formato hh:mm:ss
+    // Formatear duración en formato hh:mm:ss
+    $duracionFormatted = sprintf("%02d:%02d:%02d", $duracionHoras, $duracionMinutos, 0);
 
+    // Preparar datos para la API
     $api = new ConexionAPI();
     $data = array(
-        'idServicio' => $idServicio,
         'Nombre' => $nombre,
         'Descripcion' => $descripcion,
         'Precio' => (float)$precio,
         'Duracion' => $duracionFormatted,
+        'Img' => $imagen // Campo de imagen opcional
     );
 
-    // Solo agregar el campo de imagen si tiene contenido
-    if (!empty($imagen)) {
-        $data['Img'] = $imagen;
-    }
+    // Llamada a la API para guardar el servicio
+    $response = $api->post("/Servicios", $data);
 
-    $response = $api->put("/Servicios/" . urlencode($idServicio), $data);
-
-    // Verificar el estado de la respuesta HTTP
-    if ($response && isset($response['status_code']) && $response['status_code'] === 200) {
-        echo "<script>alert('Servicio modificado exitosamente'); window.location='../admin.php';</script>";
+    // Manejo de respuesta de la API
+    if ($response && isset($response['status_code']) && $response['status_code'] === 201) {
+        echo "<script>alert('Servicio agregado exitosamente'); window.location='../admin.php';</script>";
     } else {
-        $errorMessage = isset($response['body']['message']) ? $response['body']['message'] : 'Error al modificar el servicio';
-        echo "<script>alert('$errorMessage'); window.location='form_edita_servicio.php';</script>";
+        $errorMessage = isset($response['body']['message']) ? $response['body']['message'] : 'Error al agregar el servicio';
+        echo "<script>alert('$errorMessage'); window.history.back();</script>";
     }
 }
 ?>

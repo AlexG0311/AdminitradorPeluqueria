@@ -32,22 +32,22 @@ if (!$servicio || !is_array($servicio)) {
             const nombre = form['nombre'].value.trim();
             const descripcion = form['descripcion'].value.trim();
             const precio = form['precio'].value.trim();
-            const duracionHoras = form['duracionHoras'].value.trim();
-            const duracionMinutos = form['duracionMinutos'].value.trim();
+            const duracionHoras = form['duracionHoras'].value;
+            const duracionMinutos = form['duracionMinutos'].value;
 
-            if (nombre.length === 0) {
+            if (!nombre) {
                 alert("El campo nombre es obligatorio");
                 form['nombre'].focus();
                 return false;
             }
 
-            if (descripcion.length === 0) {
-                alert("El campo descripción es obligatorio");
+            if (!descripcion || descripcion === ".....") {
+                alert("El campo descripción es obligatorio y no puede contener solo puntos");
                 form['descripcion'].focus();
                 return false;
             }
 
-            if (precio.length === 0 || isNaN(precio)) {
+            if (!precio || isNaN(precio)) {
                 alert("El campo precio es obligatorio y debe ser un número");
                 form['precio'].focus();
                 return false;
@@ -80,22 +80,21 @@ if (!$servicio || !is_array($servicio)) {
                 <label>Duración: *</label>
                 <div>
                     <select name="duracionHoras" id="duracionHoras">
-                        <option value="0" <?php echo ($servicio['Duracion'] === '0') ? 'selected' : ''; ?>>Horas</option>
                         <?php
-                        // Generar opciones para las horas
+                        $duracion = explode(':', $servicio['Duracion']);
+                        $horas = (int)$duracion[0];
                         for ($i = 0; $i <= 23; $i++) {
-                            $selected = ($servicio['Duracion'] == $i) ? 'selected' : '';
+                            $selected = ($i === $horas) ? 'selected' : '';
                             echo "<option value='$i' $selected>$i</option>";
                         }
                         ?>
                     </select>
                     <span>:</span>
                     <select name="duracionMinutos" id="duracionMinutos">
-                        <option value="0" <?php echo ($servicio['Duracion'] === '0') ? 'selected' : ''; ?>>Minutos</option>
                         <?php
-                        // Generar opciones para los minutos
+                        $minutos = (int)$duracion[1];
                         for ($i = 0; $i < 60; $i++) {
-                            $selected = ($servicio['Duracion'] == $i) ? 'selected' : '';
+                            $selected = ($i === $minutos) ? 'selected' : '';
                             echo "<option value='$i' $selected>$i</option>";
                         }
                         ?>
@@ -108,7 +107,7 @@ if (!$servicio || !is_array($servicio)) {
                 <small>Deja en blanco si no deseas cambiar la imagen</small><br><br>
 
                 <input type="hidden" name="idServicio" value="<?php echo htmlspecialchars($idServicio); ?>">
-                <input type="submit" value="Aceptar">
+                <input type="button" value="Aceptar" onclick="validaDatos()">
                 <input type="button" value="Volver" onclick="atras()"> 
             </div>
         </form>

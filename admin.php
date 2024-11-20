@@ -33,6 +33,9 @@ $usuarios = $api->get("/usuarios");
         <li><a href="Servicios/form_edita_servicios.php"><img src="Usuarios/imagenes/ed_usuario.png" alt="Editar servicio"> Editar Servicio</a></li>
         <li><a href="Servicios/form_elimina_servicios.php"><img src="Usuarios/imagenes/el_usuario.png" alt="Eliminar servicio"> Eliminar Servicio</a></li>
         <li><a href="Servicios/consultaServicios.php"><img src="Usuarios/imagenes/co_usuario.png" alt="Consultar servicio"> Consultar Servicios</a></li>
+        
+        <!-- Nueva opción para agregar horario a un empleado -->
+        <li><a href="Horario/form_agrega_horario.php"><img src="Usuarios/imagenes/ad_usuario.png" alt="Agregar Horario"> Agregar Horario a Empleado</a></li>
       </ul>
     </div>
 
@@ -62,6 +65,15 @@ $usuarios = $api->get("/usuarios");
             <li><a href='Usuarios/consultaUsuarios.php'>Consultar usuarios</a></li>
           </ul>
         </div>
+
+        <!-- Nueva tarjeta para agregar horario a un empleado -->
+        <div class="info-card">
+          <h3>Opciones de Horario</h3>
+          <ul>
+            <li><a href="Horario/form_agrega_horario.php">Agregar Horario a Empleado</a></li>
+          </ul>
+        </div>
+
         <!-- Agrega más paneles si es necesario -->
       </div>
     </div>

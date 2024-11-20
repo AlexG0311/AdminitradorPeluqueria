@@ -18,30 +18,24 @@ session_start();
             const nombre = form['nombre'].value.trim();
             const descripcion = form['descripcion'].value.trim();
             const precio = form['precio'].value.trim();
-            const duracionHoras = form['duracionHoras'].value.trim();
-            const duracionMinutos = form['duracionMinutos'].value.trim();
+            const duracionHoras = form['duracionHoras'].value;
+            const duracionMinutos = form['duracionMinutos'].value;
             const imagen = form['imagen'].value.trim();
 
-            if (nombre.length === 0) {
+            if (!nombre) {
                 alert("El campo nombre es obligatorio");
                 form['nombre'].focus();
                 return false;
             }
 
-            if (descripcion.length === 0) {
+            if (!descripcion) {
                 alert("El campo descripción es obligatorio");
                 form['descripcion'].focus();
                 return false;
             }
 
-            if (precio.length === 0) {
-                alert("El campo precio es obligatorio");
-                form['precio'].focus();
-                return false;
-            }
-
-            if (isNaN(precio)) {
-                alert("El campo precio debe ser un número");
+            if (!precio || isNaN(precio)) {
+                alert("El campo precio es obligatorio y debe ser un número");
                 form['precio'].focus();
                 return false;
             }
@@ -52,7 +46,7 @@ session_start();
                 return false;
             }
 
-            if (imagen.length === 0) {
+            if (!imagen) {
                 alert("El campo imagen es obligatorio");
                 form['imagen'].focus();
                 return false;
@@ -69,21 +63,19 @@ session_start();
         <form action="guarda_servicios.php" method="POST" name="formulario">
             <div class="campos">
                 <label>Nombre: *</label>
-                <input type="text" id="nombre" name="nombre" /><br>
-                <br>
+                <input type="text" id="nombre" name="nombre" /><br><br>
+
                 <label>Descripción: *</label>
-                <textarea id="descripcion" name="descripcion"></textarea><br>
-                <br>
+                <textarea id="descripcion" name="descripcion"></textarea><br><br>
+
                 <label>Precio: *</label>
-                <input type="text" id="precio" name="precio" /><br>
-                <br>
+                <input type="text" id="precio" name="precio" /><br><br>
 
                 <label>Duración: *</label>
                 <div>
                     <select name="duracionHoras" id="duracionHoras">
                         <option value="0">Horas</option>
                         <?php
-                        // Generar opciones para las horas
                         for ($i = 0; $i <= 23; $i++) {
                             echo "<option value='$i'>$i</option>";
                         }
@@ -93,7 +85,6 @@ session_start();
                     <select name="duracionMinutos" id="duracionMinutos">
                         <option value="0">Minutos</option>
                         <?php
-                        // Generar opciones para los minutos
                         for ($i = 0; $i < 60; $i++) {
                             echo "<option value='$i'>$i</option>";
                         }
@@ -102,7 +93,6 @@ session_start();
                 </div>
                 <br>
 
-                <!-- Campo de texto para la imagen -->
                 <label>Imagen (URL o descripción): *</label>
                 <textarea name="imagen" id="imagen"></textarea><br><br>
 
